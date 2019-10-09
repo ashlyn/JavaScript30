@@ -62,13 +62,53 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.5s;
+      transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
     }
 
   </style>
 
   <script>
+    const secondSelector = '.second-hand';
+    const minuteSelector = '.min-hand';
+    const hourSelector = '.hour-hand';
+    const secondHand = document.querySelector(secondSelector);
+    const minuteHand = document.querySelector(minuteSelector);
+    const hourHand = document.querySelector(hourSelector);
+    const handMap = {
+      seconds: {
+        element: secondHand,
+        interval: 60,
+        getValue: now => now.getSeconds(),
+      },
+      minutes: {
+        element: minuteHand,
+        interval: 60,
+        getValue: now => now.getMinutes(),
+      },
+      hours: {
+        element: hourHand,
+        interval: 12,
+        getValue: now => now.getHours(),
+      }
+    };
 
+    const setDate = () => {
+      const DEGREES = 360;
+      const OFFSET = 90;
 
+      const now = new Date();
+
+      for (let [key, { element, interval, getValue }] of Object.entries(handMap)) {
+        const value = getValue(now);
+        const degrees = ((value / interval) * DEGREES) + OFFSET;
+        element.style.transform = `rotate(${degrees}deg)`;
+      }
+    };
+
+    setInterval(setDate, 1000);
   </script>
 </body>
 </html>
